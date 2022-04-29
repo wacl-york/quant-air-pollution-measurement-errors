@@ -18,7 +18,9 @@ def bland_altman(data,
                  lcs,
                  figsize=None,
                  xlim=None,
-                 ylim=None
+                 ylim=None,
+                 xticks=None,
+                 yticks=None
                 ):
     """
     Creates a Bland-Altman plot of a secondary instrument (e.g. a Low-Cost Sensor)
@@ -38,6 +40,10 @@ def bland_altman(data,
         x-axis limits
     ylim: List of 2 elements
         y-axis limits
+    xticks: Iterable
+        x-ticks values
+    yticks: Iterable
+        y-ticks values
 
     Returns
     -------
@@ -89,27 +95,26 @@ def bland_altman(data,
     md = np.mean(diff)
 
     #add the mean of the differences line
-    # TODO Shouldn't this just be abline?
-    ax.hlines(md, xmin = -10, xmax = 500, color ='blue', linewidth = 2, alpha = 0.8, linestyle = '-')
+    ax.axline((0, md), slope=0, color="blue", linewidth=2, alpha=0.8, linestyle='-')
 
     #standard deviation of the differences
     sd = np.std(diff, axis = 0)
 
     #add lines at 1.96 standard dev
-    # TODO Shouldn't this just be abline?
-    ax.hlines(md + 1.96*sd, xmin = -10, xmax = 500, color ='red', linewidth = 2, alpha = 0.8, linestyle = '--')
-    ax.hlines(md - 1.96*sd, xmin = -10, xmax = 500, color ='red', linewidth = 2, alpha = 0.8, linestyle = '--')
+    ax.axline((0, md + 1.96*sd), slope=0, color="red", linewidth=2, alpha=0.8,
+              linestyle='-')
+    ax.axline((0, md - 1.96*sd), slope=0, color="red", linewidth=2, alpha=0.8,
+              linestyle='-')
 
     #'x' and 'y' axis title
     ax.set_ylabel('Sensor — Reference', labelpad = 5, fontsize = 16)
     ax.set_xlabel('Mean of Ref & Sensor', labelpad = 10, fontsize = 16)
 
     #'x' and 'y' ticks
-    range_y = np.arange(-100, 110, 10)
-    ax.set_yticks(range_y)
-    range_x = np.arange(-100, 110, 10)
-    ax.set_xticks(range_x)
-    ax.tick_params(axis ='both', which ='both', labelsize=14, direction='out')
+    if xticks is not None:
+        ax.set_xticks(xticks)
+    if yticks is not None:
+        ax.set_yticks(yticks)
 
     #'y' and 'x' axis limits
     if xlim is not None:
@@ -117,28 +122,27 @@ def bland_altman(data,
     if ylim is not None:
         ax.set_ylim(ylim)
 
-    #Legend
-    legend = [lcs]
-    ax.legend(legend, loc = 'upper left', frameon = False, markerfirst = False, fontsize = 12)
-
     #annotations
+    annot_x_location = 0.67 * np.max(mean)
+
     annotation_string = 'Mean + 1.96 SD'
-    ax.annotate(annotation_string, xy = (50, md + 1.96*sd + 1), xycoords = 'data',fontsize = 11)
+    ax.annotate(annotation_string, xy = (annot_x_location, md + 1.96*sd + 1), xycoords = 'data',fontsize = 11)
 
     annotation_string = 'Mean Diff'
-    ax.annotate(annotation_string, xy = (50, md + 0.5), xycoords = 'data',fontsize = 11)
+    ax.annotate(annotation_string, xy = (annot_x_location, md + 0.5), xycoords = 'data',fontsize = 11)
 
     annotation_string = 'Mean - 1.96 SD'
-    ax.annotate(annotation_string, xy = (50, md - 1.96*sd - 2), xycoords = 'data',fontsize = 11)
+    ax.annotate(annotation_string, xy = (annot_x_location, md - 1.96*sd - 2), xycoords = 'data',fontsize = 11)
 
-    return ax
 
 def scatter(data,
             ref,
             lcs,
             figsize=None,
             xlim=None,
-            ylim=None
+            ylim=None,
+            xticks=None,
+            yticks=None
            ):
     """
     Creates a regression plot of a secondary instrument (e.g. a Low-Cost Sensor)
@@ -158,6 +162,10 @@ def scatter(data,
         x-axis limits
     ylim: List of 2 elements
         y-axis limits
+    xticks: Iterable
+        x-ticks values
+    yticks: Iterable
+        y-ticks values
 
     Returns
     -------
@@ -196,7 +204,7 @@ def scatter(data,
     n = len(x)
 
     # Calculate summary metrics
-    slope, intercept, r, p, stderr = scipy.stats.linregress(x, y)
+    slope, intercept, r, _, _ = scipy.stats.linregress(x, y)
     r2 = r*r
     rmse = mean_squared_error(y, x, squared = False)
     mae = mean_absolute_error(y, x)
@@ -209,23 +217,22 @@ def scatter(data,
     ax.scatter(x, y, c = z, s = 14, alpha = 1, linewidth = 1)
 
     #fitted line
-    # TODO Remove hardocded limits
-    x_neg = np.array([-1000, 1000])
-    ax.plot(x_neg, intercept + slope * x_neg, color = 'red', linewidth = 2, alpha = 1, linestyle = '--')
+    ax.axline((0, intercept), slope=slope, color='red', linewidth=2, alpha=1,
+              linestyle='--')
 
     #1:1 line
-    # TODO Remove hardocded limits
-    ax.plot([-1000, 1000], [-1000, 1000], color = 'black', linewidth=2, alpha = 0.8, linestyle = '-')
+    ax.axline((0, 0), slope=1, color='black', linewidth=2, alpha=0.8,
+              linestyle='-')
 
     #'x' and 'y' axis title
     ax.set_ylabel(lcs + ' $[units]}$', labelpad = 5, fontsize = 16)
     ax.set_xlabel(ref + ' $[units]}$', labelpad = 10, fontsize = 16)
         
     #'x' and 'y' ticks
-    Range = np.arange(-100, 110, 10)
-    ax.set_xticks(Range)
-    ax.set_yticks(Range)
-    ax.tick_params(axis ='both', which ='both', labelsize = 14, direction = 'out')
+    if xticks is not None:
+        ax.set_xticks(xticks)
+    if yticks is not None:
+        ax.set_yticks(yticks)
                 
     #'y' and 'x' axis limits
     if xlim is not None:
@@ -267,7 +274,9 @@ def reu_plot(data,
              DQO=None,
              figsize=None,
              xlim=None,
-             ylim=None):
+             ylim=None,
+             xticks=None,
+             yticks=None):
 
     """
     Creates a REU plot of a secondary instrument (e.g. a Low-Cost Sensor, y = LCS)
@@ -293,6 +302,10 @@ def reu_plot(data,
         x-axis limits
     ylim: List of 2 elements
         y-axis limits
+    xticks: Iterable
+        x-ticks values
+    yticks: Iterable
+        y-ticks values
 
     Returns
     -------
@@ -312,7 +325,7 @@ def reu_plot(data,
     # Simulate a LCS with noise and bias
     df['LCS1'] = (df['NO2'] + np.random.normal(0,3,len(df.index)).tolist())*1.2
 
-    plots.reu_plot(df, "NO2", "LCS1", DQO = 25)
+    plots.reu_plot(df, "NO2", "LCS1", DQO = 25, ylim=[0, 200])
     plt.show()
     """
     #initialise the figure
@@ -336,21 +349,18 @@ def reu_plot(data,
     ax.scatter(x, y, c=z, s=14, alpha=1, linewidth=1)
 
     #add DQO line
-    # TODO remove limit
     if DQO is not None:
-        ax.hlines(y = DQO, xmin=-10, xmax=500, color='darkgreen', linewidth=2, alpha=0.8, linestyle = '-')
+        ax.axline((0, DQO), slope=0, color='darkgreen', linewidth=2, alpha=0.8, linestyle = '-')
 
     ##'x' and 'y' axis title
     ax.set_ylabel('REU %', labelpad = 5, fontsize = 16)
     ax.set_xlabel(ref + ' $[units]}$', labelpad = 10, fontsize = 16)
 
     #'x' and 'y' ticks
-    # TODO remove hardcoded
-    range_y = np.arange(-100, 210, 25)
-    ax.set_yticks(range_y)
-    range_x = np.arange(-100, 110, 20)
-    ax.set_xticks(range_x)
-    ax.tick_params(axis ='both', which ='both', labelsize=14, direction='out')
+    if xticks is not None:
+        ax.set_xticks(xticks)
+    if yticks is not None:
+        ax.set_yticks(yticks)
 
     #'x' and 'y' axis limits
     if xlim is not None:
@@ -358,14 +368,10 @@ def reu_plot(data,
     if ylim is not None:
         ax.set_ylim(ylim)
 
-    #Legend
-    legend = [lcs]
-    ax.legend(legend, frameon = False, markerfirst = False, fontsize = 10)
-
     #Anotacion Data Quality Objective (DQO)
     annotation_string = r"DQO = %.f" % DQO
     annotation_string += r"%"
-    ax.annotate(annotation_string, xy = (60, DQO + 3), xycoords = 'data',fontsize = 12)
+    ax.annotate(annotation_string, xy = (0.67 * np.max(x), DQO + 3), xycoords = 'data',fontsize = 12)
 
 
 def time_series(data,
@@ -441,10 +447,6 @@ def time_series(data,
 
     #'x' and 'y' axis title
     ax.set_ylabel(ref + ' $[units]}$', labelpad = 5, fontsize = 16)
-    ax.set_xlabel('Date', labelpad = 5, fontsize = 16)
-
-    #Ticks
-    ax.tick_params(axis ='both', which ='both', labelsize=14)
 
     #Legends
     legend = [ref, lcs]
