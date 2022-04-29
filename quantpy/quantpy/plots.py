@@ -49,7 +49,7 @@ def bland_altman(data,
     -------
     Figure object
 
-    Examples
+    Example
     --------
     import quantpy.plots as plots
     import pandas as pd

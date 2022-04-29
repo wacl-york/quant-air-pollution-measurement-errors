@@ -5,8 +5,6 @@ Created on Tue Apr 26 13:12:31 2022
 @author: sebas
 """
 
-#Imports:
-import pandas as pd
 import numpy as np
 import scipy.stats
 
@@ -36,19 +34,17 @@ def reu(ref, lcs, u_xi=0.0, k=2):
 
     Example
     --------
-    #Creating a simple dataframe:
     from quantpy.reu import reu
     import pandas as pd
     import numpy as np
-    #Index
+
+    # Creating a simple dataframe with random reference data
     times = pd.date_range('2021-10-01', periods = 1000, freq ='60min')
-    #dataframe creation with only the  reference concentration column
     df = pd.DataFrame(np.random.lognormal(mean = 3, sigma = 0.4, size = 1000),
                       columns = ['NO2'], index = times)
-    #adding the LCSs data column. This example adds noise and some bias.
+    # Simulate a LCS with noise and bias
     df['LCS1'] = (df['NO2'] + np.random.normal(0,3,len(df.index)).tolist())*1.2
 
-    #Testing the function
     reu(df['NO2'], df['LCS1'], u_xi = 0.0)
     """
     #masking the NaN's
