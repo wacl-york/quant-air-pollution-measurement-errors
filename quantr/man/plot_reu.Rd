@@ -45,7 +45,7 @@ df <- data.frame(timestamp=seq.POSIXt(from=as.POSIXct("2020-09-24 09:00:00"),
                  ref=rnorm(n_vals, 30, 5),
                  lowcost=rnorm(n_vals, 32, 8))
 
-Remove the y-axis limits to show the large relative uncertainity of this imaginary device
+# Remove the y-axis limits to show the large relative uncertainity of this imaginary device
 plot_reu(df, lcs_column="lowcost", reference_column="ref", y_limits=NULL)
 
 # Add in the LV and DQO

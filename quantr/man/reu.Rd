@@ -4,33 +4,22 @@
 \alias{reu}
 \title{Calculates the Relative Expanded Uncertainty of low-cost sensor measurements when compared with a reference instrument.}
 \usage{
-reu(
-  ref,
-  lcs,
-  alpha = 2,
-  u_ref = 0,
-  lambda = 1,
-  method = c("GDE", "NILU1", "NILU2")
-)
+reu(ref, lcs, k = 2, u_ref = 0)
 }
 \arguments{
 \item{ref}{Reference measurements}
 
 \item{lcs}{Low-cost-sensor measurements}
 
-\item{alpha}{Multiplier of standard error in relative uncertainty to obtain the expanded uncertainty. Defaults to 2 standard deviations.}
+\item{k}{Multiplier of standard error in relative uncertainty to obtain the expanded uncertainty. Defaults to 2 standard deviations.}
 
 \item{u_ref}{Relative uncertainty of the reference instrument}
-
-\item{lambda}{TODO}
-
-\item{method}{Which of the 3 REU calculation methods to use. TODO}
 }
 \value{
 A vector of the same length as \code{ref} and \code{lcs} containing the corresponding REU estimates.
 }
 \description{
-Foo TODO include detail of different methods
+Calculates the Relative Expanded Uncertainty of low-cost sensor measurements when compared with a reference instrument.
 }
 \examples{
 # Create dummy data frame
