@@ -1,3 +1,5 @@
+[![DOI](https://zenodo.org/badge/485404967.svg)](https://zenodo.org/badge/latestdoi/485404967)
+
 # Air pollution measurement errors: Is your data fit for purpose?
 
 This repository contains Python and R code for reproducing the diagnostic plots shown in _Air pollution measurement errors: Is your data fit for purpose?_ (Diez et al, 2022) (currently under review).
