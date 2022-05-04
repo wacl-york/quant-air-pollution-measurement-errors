@@ -1,6 +1,6 @@
-## Visually evaluating air quality low-cost-sensors
+# Visually evaluating air quality low-cost-sensors
 
-This repository contains Python and R code for reproducing the diagnostic plots shown in <PAPER REFERENCE>.
+This repository contains Python and R code for reproducing the diagnostic plots shown in _Air pollution measurement errors: Is your data fit for purpose?_ (Diez et al, 2022) (currently under review).
 
 ## Python package
 
@@ -62,3 +62,8 @@ plot_time_series(df, lcs_column="lowcost", reference_column="ref")
 ```
 
 See the accompanying help pages (e.g. `?plot_reu`) for further details.
+
+## Real world data
+
+The real world air quality measurements that were used to generate some of the figures in the paper are available in the `data` sub-folder.
+See the README in that directory for details on the data structure.
