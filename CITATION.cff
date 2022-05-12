@@ -1,0 +1,15 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it as below."
+authors:
+  - family-names: Lacy
+    given-names: Stuart E
+    orcid: https://orcid.org/0000-0002-8570-7528
+  - family-names: Diez
+    given-names: Sebastian
+    orcid: https://orcid.org/0000-0001-9659-0356
+  - family-names: Edwards
+    given-names: Pete M
+title: "wacl-york/quant-air-pollution-measurement-errors: Paper submission"
+version: 0.1.0
+doi: 10.5281/zenodo.6518027 
+date-released: 2022-05-04
