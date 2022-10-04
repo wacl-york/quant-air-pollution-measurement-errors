@@ -2,7 +2,7 @@
 
 # Air pollution measurement errors: Is your data fit for purpose?
 
-This repository contains Python and R code for reproducing the diagnostic plots shown in _Air pollution measurement errors: Is your data fit for purpose?_ (Diez et al, 2022) (currently under review).
+This repository contains Python and R code for reproducing the diagnostic plots shown in _Air pollution measurement errors: Is your data fit for purpose?_ (Diez et al, 2022) published in Atmospheric Measurement Techniques ([https://doi.org/10.5194/amt-15-4091-2022](https://doi.org/10.5194/amt-15-4091-2022)).
 
 ## Python package
 
