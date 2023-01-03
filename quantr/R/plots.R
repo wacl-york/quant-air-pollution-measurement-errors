@@ -20,13 +20,13 @@
 #' plot_time_series(df, lcs_column="lowcost", reference_column="ref", time_column="timestamp")
 #' @export
 plot_time_series <- function(data, lcs_column="lcs", reference_column="reference", time_column="time") {
-    data |>
+    data %>%
         dplyr::rename(lcs = lcs_column,
                reference = reference_column,
-               time = time_column) |>
-        tidyr::pivot_longer(c(lcs, reference), names_to="type") |>
+               time = time_column) %>%
+        tidyr::pivot_longer(c(lcs, reference), names_to="type") %>%
         dplyr::mutate(type = factor(type, levels=c("lcs", "reference"),
-                             labels=c("LCS", "Reference"))) |>
+                             labels=c("LCS", "Reference"))) %>%
         ggplot2::ggplot() +
             ggplot2::geom_line(ggplot2::aes(x=time, y=value, colour=type), na.rm=T, alpha=0.8) +
             ggplot2::scale_colour_manual("", values=c("Black", "Red")) +
@@ -55,7 +55,7 @@ plot_time_series <- function(data, lcs_column="lcs", reference_column="reference
 #' plot_scatter(df, lcs_column="lowcost", reference_column="ref")
 #' @export
 plot_scatter <- function(data, lcs_column="lcs", reference_column="reference") {
-    data <- data |>
+    data <- data %>%
         dplyr::rename(lcs = lcs_column,
                       reference = reference_column)
 
@@ -72,7 +72,7 @@ plot_scatter <- function(data, lcs_column="lcs", reference_column="reference") {
     rmse_label <- sprintf("RMSE = %.2f", rmse)
     label <- sprintf("%s<br>%s<br>%s", eq, r2_label, rmse_label)
 
-    data |>
+    data %>%
         ggplot2::ggplot(ggplot2::aes(x=reference, y=lcs)) +
         ggpointdensity::geom_pointdensity(na.rm=T) +
         ggplot2::geom_abline(slope=1, intercept=0, colour="steelblue", size=0.7) +
@@ -109,19 +109,19 @@ plot_scatter <- function(data, lcs_column="lcs", reference_column="reference") {
 #' plot_bland_altman(df, lcs_column="lowcost", reference_column="ref")
 #' @export
 plot_bland_altman <- function(data, lcs_column="lcs", reference_column="reference") {
-    data <- data |>
+    data <- data %>%
         dplyr::rename(lcs = lcs_column,
                reference = reference_column)
 
-    limits <- data |>
-        dplyr::mutate(error = reference - lcs, avg = (reference + lcs) / 2) |>
+    limits <- data %>%
+        dplyr::mutate(error = reference - lcs, avg = (reference + lcs) / 2) %>%
         dplyr::summarise(mean = mean(error, na.rm=T),
-                  sd = sd(error, na.rm=T)) |>
+                  sd = sd(error, na.rm=T)) %>%
         dplyr::mutate(lower = mean - 1.96 * sd,
                upper = mean + 1.96 * sd)
 
-    data |>
-        dplyr::mutate(error = reference - lcs, avg = (reference + lcs) / 2) |>
+    data %>%
+        dplyr::mutate(error = reference - lcs, avg = (reference + lcs) / 2) %>%
         ggplot2::ggplot(ggplot2::aes(x=avg, y=error)) +
             ggpointdensity::geom_pointdensity(na.rm=T) +
             ggplot2::geom_hline(ggplot2::aes(yintercept=lower), data=limits, linetype="dashed", colour="red") +
@@ -164,10 +164,10 @@ plot_bland_altman <- function(data, lcs_column="lcs", reference_column="referenc
 #' plot_reu(df, lcs_column="lowcost", reference_column="ref", y_limits=NULL, LV=50, DQO=40)
 #' @export
 plot_reu <- function(data, lcs_column="lcs", reference_column="reference", LV=NULL, DQO=NULL, y_limits=c(0, 200), smooth=TRUE) {
-    p <- data |>
+    p <- data %>%
         dplyr::rename(lcs = lcs_column,
-               reference = reference_column) |>
-        dplyr::mutate(reu = reu(reference, lcs)) |>
+               reference = reference_column) %>%
+        dplyr::mutate(reu = reu(reference, lcs)) %>%
         ggplot2::ggplot(ggplot2::aes(x=reference, y=reu)) +
             ggpointdensity::geom_pointdensity() +
             ggplot2::scale_colour_viridis_c() +
