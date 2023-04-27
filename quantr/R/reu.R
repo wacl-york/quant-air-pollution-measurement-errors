@@ -17,12 +17,15 @@
 #' reu(df$ref, df$lowcost)
 #'
 #' @export
-reu <- function(ref, lcs, k=2, u_ref = 0) {
+reu <- function(ref, lcs, k=2, u_ref = 0, min_samples=10) {
     stopifnot(length(ref) == length(lcs))
 
     # Setup to pairwise complete observations
     available <- !is.na(lcs) & !is.na(ref)
     n <- sum(available)
+    if (n < min_samples) {
+        return(rep(NA, length(ref)))
+    }
 
     # Fit linear model and obtain derived statistics
     mod <- lm(lcs ~ ref)
