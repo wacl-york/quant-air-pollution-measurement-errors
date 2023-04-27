@@ -23,8 +23,6 @@ reu <- function(ref, lcs, k=2, u_ref = 0) {
     # Setup to pairwise complete observations
     available <- !is.na(lcs) & !is.na(ref)
     n <- sum(available)
-    lcs <- lcs[available]
-    ref <- ref[available]
 
     # Fit linear model and obtain derived statistics
     mod <- lm(lcs ~ ref)
